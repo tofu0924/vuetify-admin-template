@@ -1,44 +1,30 @@
 <template>
   <v-app>
     <v-system-bar
+
       color="primary"
       dark
       height="100px"
       app
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-      <v-spacer></v-spacer>
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-spacer />
     </v-system-bar>
     <v-navigation-drawer
       color="secondary"
       app
+      permanent
+      dark
+      :src="require('@/assets/sidebar.jpg')"
+    >
+      <!-- v-slot:img = #img -->
+      <template
+        #img="props"
       >
+        <v-img
+          :gradient="gradient"
+          v-bind="props"
+        />
+      </template>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6">
@@ -49,7 +35,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider />
       <v-list
         dense
         nav
@@ -58,25 +44,25 @@
           v-for="item in items"
           :key="item.title"
           link
+          :to="item.to"
+          active-class="primary"
+          class="py-1"
         >
-          <v-checkbox
-            v-model="item.val"
-            value
-          ></v-checkbox>
-
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
-          <v-btn
-            :color="item.color"
-          ></v-btn>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-main
-      
+    <v-main>
+      <v-container
+        fluid
       >
-      <router-view />
+        <router-view />
+      </v-container>
     </v-main>
   </v-app>
 </template>
@@ -88,11 +74,30 @@ export default {
 
   data: () => ({
     items: [
-          { title: 'Dashboard', icon: 'mdi-view-dashboard', color: '#ff00ff', val: true},
-          { title: 'Photos', icon: 'mdi-image', color: '#12ff12', val: true },
-          { title: 'About', icon: 'mdi-help-box', color: '#feff0f', val: false },
-        ],
-        right: null,
+      { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/'},
+      { title: 'Grid System', icon: 'mdi-image', to: '/grid-system'},
+      { title: 'Grid List Page', icon: 'mdi-image', to: '/grid-list-page'},
+      { title: 'Break Points', icon: 'mdi-image', to: '/break-points'},
+      { title: 'Typography', icon: 'mdi-image', to: '/typography'},
+      { title: 'Tables', icon: 'mdi-table-settings', to: '/tables'},
+      { title: 'Forms', icon: 'mdi-form-select', to: '/forms'},
+      { title: 'Buttons', icon: 'mdi-gesture-tap-button', to: '/buttons'},
+      { title: 'Icons', icon: 'mdi-emoticon-excited-outline', to: '/icons'},
+    ],
+    listitems: [
+      { title: 'Dashboard', icon: 'mdi-view-dashboard', color: '#ff00ff', val: true},
+      { title: 'Photos', icon: 'mdi-image', color: '#12ff12', val: true },
+      { title: 'About', icon: 'mdi-help-box', color: '#feff0f', val: false },
+    ],
+    right: null,
+    gradient: 'rgba(0,0,0,.7), rgba(0,0,0,.7)',
   }),
 };
 </script>
+
+
+<style>
+
+
+
+</style>
