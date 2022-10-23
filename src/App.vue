@@ -5,83 +5,91 @@
       dark
       height="50px"
       align="center"
-      app
+      window
     >
       <div>3D Rendering</div>
       <input
-        v-model="windowHeight"
+        v-model="layerId"
         class="width: 100px"
       >
       <v-spacer />
     </v-system-bar>
 
-    <v-navigation-drawer
-      :width="width"
-      color="secondary"
-      dark
-      permanent
-      app
-    >
-      <!-- v-slot:img = #img -->
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6">
-            3D Layer
-          </v-list-item-title>
-          <v-list-item-subtitle> visible setting </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider />
-      <v-list
-        dense
-        nav
+    <splitpanes vertical>
+      <pane
+        min-size="5"
+        :size="size"
+        max-size="50"
       >
-        <v-list-item
-          v-for="(item, index) in layerInfos"
-          :key="index"
-          class="pa-0 ma-0"
+        <v-navigation-drawer
+          :width="`{size}%`"
+          color="secondary"
+          dark
+          permanent
         >
-          <v-checkbox
-            v-model="item.check"
-            :label="`Layer: ${item.layer}`"
-            class="pa-0 ma-0 shrink-mr-2"
-            :color="item.csscolor"
-          />
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <div
-      class="splitter"
-      :style="`left: ${width -15}px`"
-    />
-    <v-main>
-      <v-container
-        class="ma-0 pa-0"
-        fluid
-      >
-        <v-row>
-          <v-col
-            cols="12"
+          <!-- v-slot:img = #img -->
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="text-h6">
+                3D Layer
+              </v-list-item-title>
+              <v-list-item-subtitle> visible setting </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider />
+          <v-list
+            dense
+            nav
           >
-            <v-card
-              class="ma-5 pa-0"
-              flat
-              outlined
-              color="secondary"
-              height="800px"
-            />
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
+            <v-list-item
+              v-for="(item, index) in layerInfos"
+              :key="index"
+              class="pa-0 ma-0"
+            >
+              <v-checkbox
+                v-model="item.check"
+                :label="`Layer: ${item.layer}`"
+                class="pa-0 ma-0 shrink-mr-2"
+                :color="item.csscolor"
+              />
+            </v-list-item>
+          </v-list>
+        </v-navigation-drawer>
+      </pane>
+
+      <pane>
+        <v-main>
+          <v-container
+            class="ma-0 pa-0"
+            fluid
+          >
+            <v-row>
+              <v-col cols="12">
+                <v-card
+                  class="ma-5 pa-0"
+                  flat
+                  outlined
+                  color="secondary"
+                  height="800px"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-main>
+      </pane>
+    </splitpanes>
   </v-app>
 </template>
 
 <script>
+import { Splitpanes, Pane } from "splitpanes";
+import "splitpanes/dist/splitpanes.css";
+
 export default {
   name: "App",
+  components: { Splitpanes, Pane },
   data: () => ({
-    width: 256,
+    size: 20,
     layerInfos: [
       { layer: 0, color: [0, 0, 0], check: true, csscolor: "#000000" },
       { layer: 1, color: [0, 0, 0], check: true, csscolor: "#fcfcfc" },
@@ -109,6 +117,23 @@ export default {
       { title: "Buttons", icon: "mdi-gesture-tap-button", to: "/buttons" },
       { title: "Icons", icon: "mdi-emoticon-excited-outline", to: "/icons" },
     ],
+    beforeDestroy() {
+      if (typeof window === "undefined") return;
+
+      window.removeEventListener("resize", this.onResize, { passive: true });
+    },
+
+    mounted() {
+      this.onResize();
+
+      window.addEventListener("resize", this.onResize, { passive: true });
+    },
+
+    methods: {
+      onResize() {
+        this.windowSize = window.innerWidth;
+      },
+    },
     layerId: 1,
     windowWidth: window.innerWidth,
     windowHeight: window.innerHeight,
@@ -133,12 +158,17 @@ export default {
   height: 34px !important;
 }
 
-.splitter{
-  position: absolute !important;
-  height: 100px;
-  z-index: 100000;
-  width: 15px !important;
-  background-color: red;
+.splitpanes {
+  background-color: transparent;
 }
 
+.splitpanes--vertical > .splitpanes__splitter {
+  min-width: 10px;
+  background-color: transparent;
+}
+
+.splitpanes--horizontal > .splitpanes__splitter {
+  min-width: 10px;
+  background-color: transparent;
+}
 </style>
