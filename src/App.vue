@@ -1,74 +1,71 @@
 <template>
   <v-app>
-    <v-system-bar color="primary" dark height="50px" align="center" window>
+    <v-system-bar color="primary" dark height="50px" align="center" app>
       <div>3D Rendering</div>
       <input v-model="layerId" class="width: 100px" />
       <v-spacer />
     </v-system-bar>
 
-    <splitpanes vertical>
-      <pane min-size="5" :size="size" max-size="50">
-        <v-navigation-drawer
-          :width="`{size}%`"
-          color="secondary"
-          dark
-          permanent
+    <v-navigation-drawer :width="width" color="secondary" dark app permanent>
+      <!-- v-slot:img = #img -->
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6"> 3D Layer </v-list-item-title>
+          <v-list-item-subtitle> visible setting </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider />
+      <v-list dense nav>
+        <v-list-item
+          v-for="(item, index) in layerInfos"
+          :key="index"
+          class="pa-0 ma-0"
         >
-          <!-- v-slot:img = #img -->
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="text-h6"> 3D Layer </v-list-item-title>
-              <v-list-item-subtitle> visible setting </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider />
-          <v-list dense nav>
-            <v-list-item
-              v-for="(item, index) in layerInfos"
-              :key="index"
-              class="pa-0 ma-0"
-            >
-              <v-checkbox
-                v-model="item.check"
-                :label="`Layer: ${item.layer}`"
-                class="pa-0 ma-0 shrink-mr-2"
-                :color="item.csscolor"
-              />
-            </v-list-item>
-          </v-list>
-        </v-navigation-drawer>
-      </pane>
+          <v-checkbox
+            v-model="item.check"
+            :label="`Layer: ${item.layer}`"
+            class="pa-0 ma-0 shrink-mr-2"
+            :color="item.csscolor"
+          />
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-      <pane>
-        <v-main>
-          <v-container class="ma-0 pa-0" fluid>
-            <v-row>
-              <v-col cols="12">
-                <v-card
-                  class="ma-5 pa-0"
-                  flat
-                  outlined
-                  color="secondary"
-                  height="800px"
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-main>
-      </pane>
-    </splitpanes>
+    <div
+      class="splitter"
+      :style="`left:${width - 3}px; height:${windowHeight - 50}px`"
+      @mousedown="startResizeMenu"
+      @mouseenter="beforeResizeMenu"
+      @mousemove="resizeMenu"
+      @mouseup="endResizeMenu"
+      @mouseleave="endResizeMenu"
+    />
+    <v-main>
+      <v-container class="ma-0 pa-0" fluid>
+        <v-row>
+          <v-col cols="12">
+            <v-card
+              class="ma-5 pa-0"
+              flat
+              outlined
+              color="secondary"
+              height="800px"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import { Splitpanes, Pane } from "splitpanes";
-import "splitpanes/dist/splitpanes.css";
-
 export default {
   name: "App",
-  components: { Splitpanes, Pane },
   data: () => ({
-    size: 20,
+    width: 256,
+    width_pre: 256,
+    xPosition: 0,
+    windowHeight: window.innerHeight,
     layerInfos: [
       { layer: 0, color: [0, 0, 0], check: true, csscolor: "#000000" },
       { layer: 1, color: [0, 0, 0], check: true, csscolor: "#fcfcfc" },
@@ -102,7 +99,28 @@ export default {
       { title: "Icons", icon: "mdi-emoticon-excited-outline", to: "/icons" },
     ],
     layerId: 1,
+    resizingMode: false,
   }),
+  methods: {
+    beforeResizeMenu(event) {
+      this.width_pre = this.width;
+      this.xPosition = event.pageX;
+    },
+    startResizeMenu(event) {
+      this.resizingMode = true;
+    },
+    resizeMenu(event) {
+      if (this.resizingMode) {
+        let deltaX = event.pageX - this.xPosition;
+        this.width = this.width_pre + deltaX;
+        console.log(event.pageX);
+      }
+    },
+    endResizeMenu(event) {
+      this.resizingMode = false;
+      console.log(this.pageX);
+    },
+  },
 };
 </script>
 
@@ -111,17 +129,15 @@ export default {
   height: 34px !important;
 }
 
-.splitpanes {
-  background-color: transparent;
+.splitter {
+  z-index: 100000;
+  position: absolute;
+  top: 50px !important;
+  background-color: red;
+  width: 5px;
 }
 
-.splitpanes--vertical > .splitpanes__splitter {
-  min-width: 10px;
-  background-color: transparent;
-}
-
-.splitpanes--horizontal > .splitpanes__splitter {
-  min-width: 10px;
-  background-color: transparent;
+.splitter:hover {
+  cursor: ew-resize;
 }
 </style>
