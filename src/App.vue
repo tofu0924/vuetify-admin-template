@@ -1,72 +1,60 @@
 <template>
   <v-app>
-    <v-system-bar color="primary" dark height="50px" align="center" window>
+    <v-system-bar color="primary" dark height="50px" align="center" app>
       <div>3D Rendering</div>
       <input v-model="layerId" class="width: 100px" />
       <div>{{ parseInt((width / windowSize) * 100) }}</div>
       <v-spacer />
     </v-system-bar>
-
-    <splitpanes vertical>
-      <pane
-        min-size="5"
-        :size="parseInt((width / windowSize) * 100)"
-        max-size="50"
-      >
-        <v-navigation-drawer :width="width" color="secondary" dark permanent>
-          <!-- v-slot:img = #img -->
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="text-h6"> 3D Layer </v-list-item-title>
-              <v-list-item-subtitle> visible setting </v-list-item-subtitle>
-            </v-list-item-content>
+    <div class="container">
+      <v-navigation-drawer :width="width" color="secondary" dark permanent app>
+        <!-- v-slot:img = #img -->
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title class="text-h6"> 3D Layer </v-list-item-title>
+            <v-list-item-subtitle> visible setting </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider />
+        <v-list dense nav>
+          <v-list-item
+            v-for="(item, index) in layerInfos"
+            :key="index"
+            class="pa-0 ma-0"
+          >
+            <v-checkbox
+              v-model="item.check"
+              :label="`Layer: ${item.layer}`"
+              class="pa-0 ma-0 shrink-mr-2"
+              :color="item.csscolor"
+            />
           </v-list-item>
-          <v-divider />
-          <v-list dense nav>
-            <v-list-item
-              v-for="(item, index) in layerInfos"
-              :key="index"
-              class="pa-0 ma-0"
-            >
-              <v-checkbox
-                v-model="item.check"
-                :label="`Layer: ${item.layer}`"
-                class="pa-0 ma-0 shrink-mr-2"
-                :color="item.csscolor"
-              />
-            </v-list-item>
-          </v-list>
-        </v-navigation-drawer>
-      </pane>
+        </v-list>
+      </v-navigation-drawer>
 
-      <pane>
-        <v-main>
-          <v-container class="ma-0 pa-0" fluid>
-            <v-row>
-              <v-col cols="12">
-                <v-card
-                  class="ma-5 pa-0"
-                  flat
-                  outlined
-                  color="secondary"
-                  height="800px"
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-main>
-      </pane>
-    </splitpanes>
+      <v-main>
+        <v-container class="ma-0 pa-0" fluid>
+          <v-row>
+            <div class="liner">fff</div>
+            <v-col cols="11">
+              <v-card
+                class="ma-5 pa-0"
+                flat
+                outlined
+                color="secondary"
+                height="800px"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-main>
+    </div>
   </v-app>
 </template>
 
 <script>
-import { Splitpanes, Pane } from "splitpanes";
-import "splitpanes/dist/splitpanes.css";
-
 export default {
   name: "App",
-  components: { Splitpanes, Pane },
   data: () => ({
     width: 256,
     windowSize: window.innerWidth,
@@ -128,18 +116,16 @@ export default {
 .v-input--selection-controls__ripple {
   height: 34px !important;
 }
-
-.splitpanes {
-  background-color: transparent;
+.v-navigation-drawer__content {
+  overflow-y: auto;
+}
+.container {
+  display: flex;
 }
 
-.splitpanes--vertical > .splitpanes__splitter {
-  min-width: 10px;
-  background-color: transparent;
-}
-
-.splitpanes--horizontal > .splitpanes__splitter {
-  min-width: 10px;
-  background-color: transparent;
+.liner {
+  width: 10px;
+  height: 100%;
+  background-color: red;
 }
 </style>
