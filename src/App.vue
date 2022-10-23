@@ -2,7 +2,10 @@
   <v-app>
     <v-system-bar color="primary" dark height="50px" align="center" app>
       <div>3D Rendering</div>
-      <input v-model="layerId" class="width: 100px" />
+      <input
+        v-model="layerId"
+        class="width: 100px"
+      >
       <v-spacer />
     </v-system-bar>
 
@@ -78,12 +81,7 @@ export default {
       { layer: 8, color: [0, 0, 0], check: true, csscolor: "#bbf9df" },
       { layer: 9, color: [0, 0, 0], check: true, csscolor: "#7bc8f6" },
       { layer: 10, color: [0, 0, 0], check: true, csscolor: "#fc5a50" },
-      { layer: 11, color: [0, 0, 0], check: true, csscolor: "#ff81c0" },
-      { layer: 12, color: [0, 0, 0], check: true, csscolor: "#dbb40c" },
-      { layer: 13, color: [0, 0, 0], check: true, csscolor: "#00ffff" },
-      { layer: 14, color: [0, 0, 0], check: true, csscolor: "#7e1e9c" },
-      { layer: 15, color: [0, 0, 0], check: true, csscolor: "#e6daa6" },
-      { layer: 16, color: [0, 0, 0], check: true, csscolor: "#3d1c02" },
+      { layer: 11, color: [0, 0, 0], check: true, csscolor: "#ff81c0" }
     ],
     right: null,
     gradient: "rgba(0,0,0,.7), rgba(0,0,0,.7)",
@@ -98,6 +96,23 @@ export default {
       { title: "Buttons", icon: "mdi-gesture-tap-button", to: "/buttons" },
       { title: "Icons", icon: "mdi-emoticon-excited-outline", to: "/icons" },
     ],
+    beforeDestroy() {
+      if (typeof window === "undefined") return;
+
+      window.removeEventListener("resize", this.onResize, { passive: true });
+    },
+
+    mounted() {
+      this.onResize();
+
+      window.addEventListener("resize", this.onResize, { passive: true });
+    },
+
+    methods: {
+      onResize() {
+        this.windowSize = window.innerWidth;
+      },
+    },
     layerId: 1,
     resizingMode: false,
   }),
