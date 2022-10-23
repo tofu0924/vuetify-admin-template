@@ -3,17 +3,17 @@
     <v-system-bar color="primary" dark height="50px" align="center" window>
       <div>3D Rendering</div>
       <input v-model="layerId" class="width: 100px" />
+      <div>{{ parseInt((width / windowSize) * 100) }}</div>
       <v-spacer />
     </v-system-bar>
 
     <splitpanes vertical>
-      <pane min-size="5" :size="size" max-size="50">
-        <v-navigation-drawer
-          :width="`{size}%`"
-          color="secondary"
-          dark
-          permanent
-        >
+      <pane
+        min-size="5"
+        :size="parseInt((width / windowSize) * 100)"
+        max-size="50"
+      >
+        <v-navigation-drawer :width="width" color="secondary" dark permanent>
           <!-- v-slot:img = #img -->
           <v-list-item>
             <v-list-item-content>
@@ -68,7 +68,8 @@ export default {
   name: "App",
   components: { Splitpanes, Pane },
   data: () => ({
-    size: 20,
+    width: 256,
+    windowSize: window.innerWidth,
     layerInfos: [
       { layer: 0, color: [0, 0, 0], check: true, csscolor: "#000000" },
       { layer: 1, color: [0, 0, 0], check: true, csscolor: "#fcfcfc" },
@@ -101,6 +102,23 @@ export default {
       { title: "Buttons", icon: "mdi-gesture-tap-button", to: "/buttons" },
       { title: "Icons", icon: "mdi-emoticon-excited-outline", to: "/icons" },
     ],
+    beforeDestroy() {
+      if (typeof window === "undefined") return;
+
+      window.removeEventListener("resize", this.onResize, { passive: true });
+    },
+
+    mounted() {
+      this.onResize();
+
+      window.addEventListener("resize", this.onResize, { passive: true });
+    },
+
+    methods: {
+      onResize() {
+        this.windowSize = window.innerWidth;
+      },
+    },
     layerId: 1,
   }),
 };
