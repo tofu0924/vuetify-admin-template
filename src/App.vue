@@ -111,6 +111,7 @@ export default {
     },
     resizeMenu(event) {
       if (this.resizingMode) {
+        event.preventDefault();
         let deltaX = event.pageX - this.xPosition;
         this.width = this.width_pre + deltaX;
         console.log(event.pageX);
