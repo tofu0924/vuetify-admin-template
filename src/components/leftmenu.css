@@ -1,0 +1,68 @@
+.v-navigation-drawer::v-deep .v-navigation-drawer__border{
+  background-color:#b8b8b8 !important;
+}
+
+.v-input--selection-controls{
+  height: 32px !important;  
+}
+
+.v-input::v-deep .v-input__control{
+  height: 32px !important;
+}
+
+.v-input::v-deep .v-input__slot{
+  height: 32px !important;
+  margin: 0px !important;
+}
+
+.v-input::v-deep .v-icon{
+  font-size:16px !important;
+}
+
+.v-input::v-deep .v-input--selection-controls__ripple{
+  border-radius: 50%;
+  cursor: pointer;
+  height: 24px;
+  position: absolute;
+  transition: inherit;
+  width: 24px;
+  left: 0px;
+  top: calc(50% - 12px);
+  margin: 0px;
+}
+
+.divSsrListTitle{
+  background-color: #b3b3b3;
+  min-height:32px;
+  height: 32px;
+}
+
+.divSsrListItem{
+  background-color: #ffffff;
+  min-height:32px !important;
+  height: 32px;
+}
+
+.fontSsrListTitle{
+  font-size:13px;
+  font-weight: bold;
+}
+
+.fontSsrListSubtitle{
+  font-size:12px;
+  font-weight: normal;
+  color:#585858
+}
+
+.fontSsrListItem{
+  font-size:13px;
+  font-weight: normal;
+  color:#5d5d5d;
+
+}
+
+.bottomBoarder{
+  background-color: #b8b8b8;
+  width: 100%;
+  height: 1px;
+}
